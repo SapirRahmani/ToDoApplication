@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">ToDoApplication</string>
+    <string name="app_name">To Do List</string>
     <string name="title_hint">Title</string>
     <string name="addTaskTitle">Add New Task</string>
     <string name="task_description_hint">Task description</string>
+    <string name="create_time_hint">01/01/19 15:05</string>
 </resources>

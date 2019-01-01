@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class NewTaskFragment : Fragment() {
-
-
+class NewTaskFragment : BaseFragment() {
     companion object {
 
         fun newInstance(): NewTaskFragment {
