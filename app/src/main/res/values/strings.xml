@@ -4,4 +4,6 @@
     <string name="addTaskTitle">Add New Task</string>
     <string name="task_description_hint">Task description</string>
     <string name="create_time_hint">01/01/19 15:05</string>
+    <string name="new_task_bundle_key">Task</string>
+    <string name="tasks_list_bundle_key">TasksList</string>
 </resources>

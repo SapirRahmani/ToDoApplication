@@ -7,13 +7,17 @@ import android.os.Bundle
 
 class MainActivity : AppCompatActivity(), NavigationListener {
 
+    lateinit var tasks: ArrayList<ToDoTask>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        TasksListSingleton.initialize()
+        tasks = TasksListSingleton.instance.TasksList
 
         if (savedInstanceState == null) {
             val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.add(R.id.frameLayout_main, ToDoListTasksFragment.newInstance())
+            fragmentTransaction.add(R.id.frameLayout_main, TasksListFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
         }
@@ -21,19 +25,24 @@ class MainActivity : AppCompatActivity(), NavigationListener {
 
     override fun onNavClick(fragment: String, bundle: Bundle?) {
         when (fragment) {
-            ToDoListTasksFragment.toString() -> goToDoListTasksPage(bundle)
-            NewTaskFragment.toString() -> goNewTaskPage()
+            TasksListFragment.toString() -> goToTasksListPage(bundle)
+            NewTaskFragment.toString() -> goToNewTaskPage()
         }
     }
 
-    private fun goNewTaskPage() {
+    private fun goToNewTaskPage() {
         replaceFragment(R.id.frameLayout_main, NewTaskFragment.newInstance())
     }
 
-    private fun goToDoListTasksPage(bundle: Bundle?) {
-        val showInfoFragment = ToDoListTasksFragment.newInstance()
-        if (bundle != null) showInfoFragment.arguments = bundle
-        replaceFragment(R.id.frameLayout_main, showInfoFragment)
+    private fun goToTasksListPage(newTaskBundle: Bundle?) {
+        val tasksListFragment = TasksListFragment.newInstance()
+        if (newTaskBundle != null) {
+
+            // gat new task and put in list
+            var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as ToDoTask
+            tasks.add(newTask)
+        }
+        replaceFragment(R.id.frameLayout_main, tasksListFragment)
     }
 
     private fun replaceFragment(layoutId: Int, fragment: Fragment) {

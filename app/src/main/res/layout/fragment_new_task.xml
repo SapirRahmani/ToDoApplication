@@ -2,7 +2,6 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <data>
         <variable
                 name="task"
@@ -55,7 +54,7 @@
 
         <EditText
                 android:id="@+id/et_description"
-                android:layout_height="200dp"
+                android:layout_height="232dp"
                 android:inputType="text|textMultiLine"
                 android:text="@={task.description}"
                 android:gravity="top"
