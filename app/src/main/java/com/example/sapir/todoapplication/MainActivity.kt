@@ -27,7 +27,16 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         when (fragment) {
             TasksListFragment.toString() -> goToTasksListPage(bundle)
             NewTaskFragment.toString() -> goToNewTaskPage()
+            getString(R.string.edit_fragment) -> goToEditTaskPage(bundle)
         }
+    }
+
+    private fun goToEditTaskPage(editTaskBundle: Bundle?) {
+        val fragmentInc = NewTaskFragment.newInstance()
+        if (editTaskBundle != null) {
+            fragmentInc.arguments = editTaskBundle
+        }
+        replaceFragment(R.id.frameLayout_main, NewTaskFragment.newInstance())
     }
 
     private fun goToNewTaskPage() {
@@ -38,7 +47,7 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         val tasksListFragment = TasksListFragment.newInstance()
         if (newTaskBundle != null) {
 
-            // gat new task and put in list
+            // get new task and put in list
             var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as ToDoTask
             tasks.add(newTask)
         }

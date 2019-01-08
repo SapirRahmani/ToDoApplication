@@ -4,6 +4,8 @@
     <color name="colorPrimaryLight">#FFF9C4</color>
     <color name="colorPrimary">#FFEB3B</color>
     <color name="colorPrimaryDark">#FBC02D</color>
-    <color name="colorAccent">#FF5722</color>
+    <color name="colorAccent">#c93d3d</color>
+    <color name="colorSelected">#f4baba</color>
     <color name="white">@android:color/white</color>
+    <color name="green">@android:color/holo_green_light</color>
 </resources>

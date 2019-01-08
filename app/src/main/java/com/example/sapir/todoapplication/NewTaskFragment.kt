@@ -40,6 +40,11 @@ class NewTaskFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+        val editTask = arguments?.get(getString(R.string.edit_task_bundle_key))
+        if (editTask != null)
+            fragmentAddNewTaskBinding?.task = editTask as ToDoTask?
+
+
         var args = Bundle()
         fab_save_task.setOnClickListener {
             args = saveTask()
