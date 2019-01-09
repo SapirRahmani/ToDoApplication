@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-data class ToDoTask(var title: String? = "(No Title)", var description: String, var checked:Boolean = false, val createDate: Date = Date()) :
+data class ToDoTask(var title: String? = "(No Title)", var description: String, var checked:Boolean = false, var createDate: Date = Date()) :
     Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

@@ -2,12 +2,12 @@
     <string name="app_name">To Do List</string>
     <string name="title_hint">Title</string>
     <string name="addTaskTitle">Add New Task</string>
+    <string name="editTaskTitle">Edit Task</string>
     <string name="task_description_hint">Task description</string>
     <string name="create_time_hint">01/01/19 15:05</string>
     <string name="new_task_bundle_key">Task</string>
     <string name="edit_task_bundle_key">Edit</string>
     <string name="delete">Delete</string>
     <string name="edit_fragment">EditTaskFragment</string>
-
-    <!-- <string name="tasks_list_bundle_key">TasksList</string>-->
+    <string name="description_is_empty">Description can\'t be empty !!!</string>
 </resources>

@@ -30,6 +30,7 @@ class MyAdapter(private val items: ArrayList<ToDoTask>, private val listener: Ta
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        items.sortByDescending { it -> it.createDate }
 
         val task = items[position]
         holder.tvTitle.text = task.title
@@ -39,7 +40,8 @@ class MyAdapter(private val items: ArrayList<ToDoTask>, private val listener: Ta
 
 
         changeColorOnTaskChecked(position, items, holder)
-        multiSelect(holder)
+        listener.onMultiSelect(holder)
+        listener.onEditTask(holder)
     }
 
     private fun changeColorOnTaskChecked(position: Int, items: ArrayList<ToDoTask>, holder: MyViewHolder) {
@@ -58,10 +60,6 @@ class MyAdapter(private val items: ArrayList<ToDoTask>, private val listener: Ta
         }
     }
 
-
-    private fun multiSelect(holder: MyViewHolder) {
-        listener.onSelectedMode(holder)
-    }
 
 
 }

@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         if (editTaskBundle != null) {
             fragmentInc.arguments = editTaskBundle
         }
-        replaceFragment(R.id.frameLayout_main, NewTaskFragment.newInstance())
+        replaceFragment(R.id.frameLayout_main, fragmentInc)
     }
 
     private fun goToNewTaskPage() {
