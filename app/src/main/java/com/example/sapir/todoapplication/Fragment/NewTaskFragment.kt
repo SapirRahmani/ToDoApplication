@@ -1,4 +1,4 @@
-package com.example.sapir.todoapplication
+package com.example.sapir.todoapplication.Fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.sapir.todoapplication.R
+import com.example.sapir.todoapplication.Entity.Task
 import com.example.sapir.todoapplication.databinding.FragmentNewTaskBinding
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import java.util.*
@@ -26,17 +28,11 @@ class NewTaskFragment : BaseFragment() {
         fragmentAddNewTaskBinding = FragmentNewTaskBinding.inflate(
             inflater, container, false
         )
-        val toDoTask = ToDoTask(null, "", false)
+        val toDoTask = Task()
 
         fragmentAddNewTaskBinding?.task = toDoTask
 
         return fragmentAddNewTaskBinding?.root
-    }
-
-    private fun saveTask(): Bundle {
-        val bundle = Bundle()
-        bundle.putParcelable(getString(R.string.new_task_bundle_key), fragmentAddNewTaskBinding?.task)
-        return bundle
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
@@ -48,7 +44,7 @@ class NewTaskFragment : BaseFragment() {
         if (editTask != null) {
             editMode = true;
             tv_newTaskTitle.text = getString(R.string.editTaskTitle)
-            fragmentAddNewTaskBinding?.task = editTask as ToDoTask?
+            fragmentAddNewTaskBinding?.task = editTask as Task?
             fragmentAddNewTaskBinding?.task?.createDate = Date()
 
         } else {
@@ -61,8 +57,10 @@ class NewTaskFragment : BaseFragment() {
                 Toast.makeText(activity, getString(R.string.description_is_empty), Toast.LENGTH_SHORT).show()
             } else {
                 // save and replace fragment
-                var args = saveTask()
-                myListener.onNavClick(TasksListFragment.toString(), args)
+                myListener.onNavClick(
+                    TasksListFragment.toString(),getString(
+                        R.string.new_task_bundle_key
+                    ) ,fragmentAddNewTaskBinding?.task)
             }
         }
     }

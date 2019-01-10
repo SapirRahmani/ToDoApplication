@@ -4,10 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.sapir.todoapplication.Entity.Task
+import com.example.sapir.todoapplication.Listener.TaskListener
 import kotlinx.android.synthetic.main.todo_task_item.view.*
 
 
-class MyAdapter(private val items: ArrayList<ToDoTask>, private val listener: TaskListener) :
+class MyAdapter(private val items: ArrayList<Task>, private val listener: TaskListener) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -36,15 +38,15 @@ class MyAdapter(private val items: ArrayList<ToDoTask>, private val listener: Ta
         holder.tvTitle.text = task.title
         holder.tvDescription.text = task.description
         holder.cbChecked.isChecked = task.checked
-        holder.tvCreatedDate.text = android.text.format.DateFormat.format("dd-MM-yyyy hh:mm:ss", task.createDate)
+        holder.tvCreatedDate.text = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm:ss", task.createDate)
 
 
         changeColorOnTaskChecked(position, items, holder)
         listener.onMultiSelect(holder)
-        listener.onEditTask(holder)
+        listener.onTaskClicked(holder)
     }
 
-    private fun changeColorOnTaskChecked(position: Int, items: ArrayList<ToDoTask>, holder: MyViewHolder) {
+    private fun changeColorOnTaskChecked(position: Int, items: ArrayList<Task>, holder: MyViewHolder) {
         if (items[position].checked) {
             holder.rowRelativeLayout.setBackgroundResource(R.color.colorLight)
         }
