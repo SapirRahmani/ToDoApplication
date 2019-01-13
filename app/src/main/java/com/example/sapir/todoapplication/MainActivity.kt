@@ -3,8 +3,9 @@ package com.example.sapir.todoapplication
 import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import com.example.sapir.todoapplication.Entity.Task
-import com.example.sapir.todoapplication.Entity.TasksListSingleton
+import android.view.Menu
+import com.example.sapir.todoapplication.sapirrr.TaskItem
+import com.example.sapir.todoapplication.sapirrr.TasksListSingleton
 import com.example.sapir.todoapplication.Fragment.NewTaskFragment
 import com.example.sapir.todoapplication.Fragment.TasksListFragment
 import com.example.sapir.todoapplication.Listener.NavigationListener
@@ -12,7 +13,7 @@ import com.example.sapir.todoapplication.Listener.NavigationListener
 
 class MainActivity : AppCompatActivity(), NavigationListener {
 
-    lateinit var tasks: ArrayList<Task>
+    lateinit var tasks: ArrayList<TaskItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +28,14 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         }
     }
 
-    override fun onNavClick(fragment: String, key: String?, item: Task?) {
-        var bundle: Bundle = Bundle()
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onNavClick(fragment: String, key: String?, item: TaskItem?) {
+        val bundle: Bundle = Bundle()
         if (item != null && key != null) {
             bundle.putParcelable(key, item)
         }
@@ -57,7 +64,7 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         if (newTaskBundle != null) {
 
             // get new task and put in list
-            var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as Task
+            var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as TaskItem
             TasksListSingleton.add(newTask)
         }
         replaceFragment(R.id.frameLayout_main, tasksListFragment)

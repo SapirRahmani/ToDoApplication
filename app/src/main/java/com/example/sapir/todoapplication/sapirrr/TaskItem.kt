@@ -1,11 +1,11 @@
-package com.example.sapir.todoapplication.Entity
+package com.example.sapir.todoapplication.sapirrr
 
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
 //@Entity(tableName = "tasks")
-data class Task(
+data class TaskItem(
     /*@PrimaryKey @ColumnInfo(name = "createDate")*/    var createDate: Date = Date(),
     /*@ColumnInfo(name = "title")                 */    var title: String? = "(No Title)",
     /*@ColumnInfo(name = "description")           */    var description: String,
@@ -33,12 +33,12 @@ data class Task(
         dest.writeValue(checked)
     }
 
-    companion object CREATOR : Parcelable.Creator<Task> {
-        override fun createFromParcel(parcel: Parcel): Task {
-            return Task(parcel)
+    companion object CREATOR : Parcelable.Creator<TaskItem> {
+        override fun createFromParcel(parcel: Parcel): TaskItem {
+            return TaskItem(parcel)
         }
 
-        override fun newArray(size: Int): Array<Task?> {
+        override fun newArray(size: Int): Array<TaskItem?> {
             return arrayOfNulls(size)
         }
     }

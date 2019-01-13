@@ -5,7 +5,7 @@
     <data>
         <variable
                 name="task"
-                type="com.example.sapir.todoapplication.Entity.Task"/>
+                type="com.example.sapir.todoapplication.sapirrr.TaskItem"/>
     </data>
     <android.support.constraint.ConstraintLayout style="@style/match_parent">
         <android.support.v7.widget.RecyclerView

@@ -1,4 +1,4 @@
-package com.example.sapir.todoapplication.Entity
+package com.example.sapir.todoapplication.sapirrr
 
 import android.content.res.Resources
 import android.graphics.Canvas
@@ -15,7 +15,7 @@ class TasksListSingleton() {
         private lateinit var INSTANCE: TasksListSingleton
 
         val instance: TasksListSingleton get() = INSTANCE
-        private val M_TASKS_LIST: ArrayList<Task> = ArrayList<Task>()
+        private val M_TASKS_LIST: ArrayList<TaskItem> = ArrayList<TaskItem>()
 
         fun initialize() {
             INSTANCE =
@@ -69,23 +69,23 @@ class TasksListSingleton() {
             itemTouchHelper.attachToRecyclerView(myRecyclerView);
         }
 
-        private fun activateEditTask(holder: MyAdapter.MyViewHolder, myListener: NavigationListener) {
+        fun activateEditTask(holder: MyAdapter.MyViewHolder, myListener: NavigationListener) {
             val position = holder.adapterPosition
             val task = getTaskByPos(position)
             delete(task)
 
             myListener.onNavClick(
-                Resources.getSystem().getString(R.string.edit_fragment),
-                Resources.getSystem().getString(R.string.edit_task_bundle_key),
+                "EditTaskFragment",
+                "Edit",
                 task
             )
         }
 
-        fun deleteMany(tasks: ArrayList<Task>) {
+        fun deleteMany(tasks: ArrayList<TaskItem>) {
             M_TASKS_LIST.removeAll(tasks)
         }
 
-        fun delete(task: Task) {
+        fun delete(task: TaskItem) {
             M_TASKS_LIST.remove(task)
         }
 
@@ -93,22 +93,22 @@ class TasksListSingleton() {
             return M_TASKS_LIST.size
         }
 
-        fun add(task: Task) {
+        fun add(task: TaskItem) {
             M_TASKS_LIST.add(task)
         }
 
-        fun edit(oldTask: Task, newTask: Task) {
+        fun edit(oldTask: TaskItem, newTask: TaskItem) {
             val index = M_TASKS_LIST.indexOf(oldTask)
             if (index != -1) {
                 M_TASKS_LIST[index] = newTask
             }
         }
 
-        fun getTaskByPos(position: Int): Task {
+        fun getTaskByPos(position: Int): TaskItem {
             return M_TASKS_LIST[position]
         }
 
-        fun getTasksList(): ArrayList<Task> {
+        fun getTasksList(): ArrayList<TaskItem> {
             return M_TASKS_LIST
         }
 

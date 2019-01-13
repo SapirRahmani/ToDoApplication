@@ -4,24 +4,28 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_to_do_list_tasks.*
 import android.support.v7.widget.DividerItemDecoration
+import android.view.*
 import com.example.sapir.todoapplication.*
-import com.example.sapir.todoapplication.Entity.Task
-import com.example.sapir.todoapplication.Entity.TasksListSingleton
+import com.example.sapir.todoapplication.sapirrr.TaskItem
+import com.example.sapir.todoapplication.sapirrr.TasksListSingleton
 import com.example.sapir.todoapplication.Listener.TaskListener
 import com.example.sapir.todoapplication.databinding.FragmentToDoListTasksBinding
 import kotlin.collections.ArrayList
 
 
-class TasksListFragment : BaseFragment(),
-    TaskListener {
+class TasksListFragment : BaseFragment(), TaskListener {
 
     private var fragmentTodoListTasksBinding: FragmentToDoListTasksBinding? = null
     private lateinit var mAdapter: MyAdapter
+
+    // activateDeleteSwipeListener many
+    private var selectedMode: Boolean = false
+    private var selectedItemsList: ArrayList<TaskItem> = ArrayList()
+    private var selectedPositionsList: ArrayList<Int> = ArrayList()
+
+    private var optionsMenu: Menu? = null
 
     companion object {
 
@@ -34,16 +38,16 @@ class TasksListFragment : BaseFragment(),
         fragmentTodoListTasksBinding = FragmentToDoListTasksBinding.inflate(
             inflater, container, false
         )
-        //val emptyTask = Task(null, "", false)
+        setHasOptionsMenu(true)
 
-        //fragmentTodoListTasksBinding?.task = emptyTask
+        fragmentTodoListTasksBinding?.task = TaskItem()
         return fragmentTodoListTasksBinding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var mRecyclerView = rv_todo_list as RecyclerView
+        val mRecyclerView = rv_todo_list as RecyclerView
 
         val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         mRecyclerView.addItemDecoration(itemDecoration)
@@ -56,37 +60,34 @@ class TasksListFragment : BaseFragment(),
         mRecyclerView.adapter = mAdapter
 
         // activateDeleteSwipeListener one item or multi
-        TasksListSingleton.activateDeleteSwipeListener(
-            mAdapter,
-            mRecyclerView
-        )
-        deleteMultiSelectItems()
+        TasksListSingleton.activateDeleteSwipeListener(mAdapter, mRecyclerView)
 
         //add
         fab_add_task?.setOnClickListener { myListener.onNavClick(NewTaskFragment.toString(), null) }
     }
 
-    // activateDeleteSwipeListener many
-    private var selectedMode: Boolean = false
-    private var selectedItemsList: ArrayList<Task> = ArrayList()
-    private var selectedPositionsList: ArrayList<Int> = ArrayList()
-
-    @SuppressLint("RestrictedApi")
-    private fun deleteMultiSelectItems() {
-
-        //activateDeleteSwipeListener multi select
-
-        fragmentTodoListTasksBinding?.fabRemoveTask?.setOnClickListener {
-
-            TasksListSingleton.deleteMany(selectedItemsList)
-            for (pos: Int in selectedPositionsList) {
-                mAdapter.notifyItemRemoved(pos)
-            }
-            fragmentTodoListTasksBinding?.fabRemoveTask?.visibility = View.INVISIBLE
-            selectedMode = false
-        }
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        val inflater = inflater
+        inflater?.inflate(R.menu.menu, menu)
+        if (menu != null)
+            optionsMenu = menu
     }
 
+    @SuppressLint("RestrictedApi")
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.action_delete -> {
+                TasksListSingleton.deleteMany(selectedItemsList)
+                for (pos: Int in selectedPositionsList) {
+                    mAdapter.notifyItemRemoved(pos)
+                }
+                item.isVisible = false
+                selectedMode = false
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     //  short click after long click
     private fun onClickInSelectMode(holder: MyAdapter.MyViewHolder) {
@@ -105,12 +106,12 @@ class TasksListFragment : BaseFragment(),
 
     }
 
-    // multi select
     @SuppressLint("RestrictedApi")
-    override fun onMultiSelect(holder: MyAdapter.MyViewHolder) {
+    override fun onTaskLongClicked(holder: MyAdapter.MyViewHolder) {
         holder.itemView.setOnLongClickListener(View.OnLongClickListener setOnLongClickListener@{
             if (!selectedMode) {
-                fab_remove_task?.visibility = View.VISIBLE
+                val item = optionsMenu?.findItem(R.id.action_delete)
+                item?.isVisible = true
                 selectedMode = true
                 val selectedPosition = holder.adapterPosition
                 selectedItemsList.add(
@@ -131,13 +132,9 @@ class TasksListFragment : BaseFragment(),
             if (selectedMode) {
                 onClickInSelectMode(holder)
             } else {
-                TasksListSingleton.activateDeleteSwipeListener(
-                    mAdapter,
-                    rv_todo_list
-                )
+                TasksListSingleton.activateEditTask(holder, myListener)
 
             }
         }
     }
 }
-

@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.sapir.todoapplication.sapirrr.*
 import com.example.sapir.todoapplication.R
-import com.example.sapir.todoapplication.Entity.Task
 import com.example.sapir.todoapplication.databinding.FragmentNewTaskBinding
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import java.util.*
@@ -28,9 +28,8 @@ class NewTaskFragment : BaseFragment() {
         fragmentAddNewTaskBinding = FragmentNewTaskBinding.inflate(
             inflater, container, false
         )
-        val toDoTask = Task()
 
-        fragmentAddNewTaskBinding?.task = toDoTask
+        fragmentAddNewTaskBinding?.task = TaskItem()
 
         return fragmentAddNewTaskBinding?.root
     }
@@ -44,7 +43,7 @@ class NewTaskFragment : BaseFragment() {
         if (editTask != null) {
             editMode = true;
             tv_newTaskTitle.text = getString(R.string.editTaskTitle)
-            fragmentAddNewTaskBinding?.task = editTask as Task?
+            fragmentAddNewTaskBinding?.task = editTask as TaskItem?
             fragmentAddNewTaskBinding?.task?.createDate = Date()
 
         } else {
