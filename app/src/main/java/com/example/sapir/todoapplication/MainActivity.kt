@@ -4,16 +4,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.view.Menu
-import com.example.sapir.todoapplication.sapirrr.TaskItem
-import com.example.sapir.todoapplication.sapirrr.TasksListSingleton
 import com.example.sapir.todoapplication.Fragment.NewTaskFragment
 import com.example.sapir.todoapplication.Fragment.TasksListFragment
 import com.example.sapir.todoapplication.Listener.NavigationListener
 
+import com.example.sapir.todoapplication.Listener.OnBackPressedListener
+
 
 class MainActivity : AppCompatActivity(), NavigationListener {
-
-    lateinit var tasks: ArrayList<TaskItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +23,20 @@ class MainActivity : AppCompatActivity(), NavigationListener {
             fragmentTransaction.add(R.id.frameLayout_main, TasksListFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
+
+
         }
+    }
+
+    override fun onBackPressed() {
+        val fragmentList = supportFragmentManager.fragments
+        for (fragment: Fragment in fragmentList) {
+            if (fragment is OnBackPressedListener) {
+                (fragment as OnBackPressedListener).onBackPressed();
+                super.onBackPressed()
+            }
+        }
+        super.onBackPressed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -34,10 +45,10 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         return true
     }
 
-    override fun onNavClick(fragment: String, key: String?, item: TaskItem?) {
+    override fun onNavClick(fragment: String, key: String?, task: Task?) {
         val bundle: Bundle = Bundle()
-        if (item != null && key != null) {
-            bundle.putParcelable(key, item)
+        if (task != null && key != null) {
+            bundle.putParcelable(key, task)
         }
 
         when (fragment) {
@@ -64,7 +75,7 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         if (newTaskBundle != null) {
 
             // get new task and put in list
-            var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as TaskItem
+            var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as Task
             TasksListSingleton.add(newTask)
         }
         replaceFragment(R.id.frameLayout_main, tasksListFragment)

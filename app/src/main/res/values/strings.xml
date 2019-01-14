@@ -11,4 +11,5 @@
     <string name="edit_fragment">EditTaskFragment</string>
     <string name="description_is_empty">Description can\'t be empty !!!</string>
     <string name="trash">trash</string>
+    <string name="save_activity">Do you want to save this Task before you exit?</string>
 </resources>

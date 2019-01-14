@@ -8,9 +8,10 @@ import kotlinx.android.synthetic.main.fragment_to_do_list_tasks.*
 import android.support.v7.widget.DividerItemDecoration
 import android.view.*
 import com.example.sapir.todoapplication.*
-import com.example.sapir.todoapplication.sapirrr.TaskItem
-import com.example.sapir.todoapplication.sapirrr.TasksListSingleton
+import com.example.sapir.todoapplication.Task
+import com.example.sapir.todoapplication.TasksListSingleton
 import com.example.sapir.todoapplication.Listener.TaskListener
+import com.example.sapir.todoapplication.Room.TasksDatabase
 import com.example.sapir.todoapplication.databinding.FragmentToDoListTasksBinding
 import kotlin.collections.ArrayList
 
@@ -22,10 +23,12 @@ class TasksListFragment : BaseFragment(), TaskListener {
 
     // activateDeleteSwipeListener many
     private var selectedMode: Boolean = false
-    private var selectedItemsList: ArrayList<TaskItem> = ArrayList()
+    private var selectedItemsList: ArrayList<Task> = ArrayList()
     private var selectedPositionsList: ArrayList<Int> = ArrayList()
 
     private var optionsMenu: Menu? = null
+
+    private var mDb: TasksDatabase? = null
 
     companion object {
 
@@ -40,7 +43,9 @@ class TasksListFragment : BaseFragment(), TaskListener {
         )
         setHasOptionsMenu(true)
 
-        fragmentTodoListTasksBinding?.task = TaskItem()
+        //mDb = TasksDatabase.getInstance(context!!)
+
+        fragmentTodoListTasksBinding?.task = Task()
         return fragmentTodoListTasksBinding?.root
     }
 
@@ -53,10 +58,10 @@ class TasksListFragment : BaseFragment(), TaskListener {
         mRecyclerView.addItemDecoration(itemDecoration)
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        mAdapter = MyAdapter(
-            TasksListSingleton.getTasksList(),
-            this
-        )
+        val tasks =  TasksListSingleton.getTasksList()
+        //val tasks =  mDb?.taskDao()?.getAll()
+
+        mAdapter = MyAdapter(tasks,this)
         mRecyclerView.adapter = mAdapter
 
         // activateDeleteSwipeListener one item or multi
@@ -72,6 +77,8 @@ class TasksListFragment : BaseFragment(), TaskListener {
         if (menu != null)
             optionsMenu = menu
     }
+
+
 
     @SuppressLint("RestrictedApi")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
