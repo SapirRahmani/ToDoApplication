@@ -14,6 +14,7 @@ import com.example.sapir.todoapplication.Listener.TaskListener
 import com.example.sapir.todoapplication.RecyclerView.MyAdapter
 import com.example.sapir.todoapplication.Util.TaskUtil
 import com.example.sapir.todoapplication.databinding.FragmentToDoListTasksBinding
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -24,7 +25,7 @@ class TasksListFragment : BaseFragment(), TaskListener {
 
     // activateDeleteSwipeListener many
     private var selectedMode: Boolean = false
-    private var selectedItemsList: ArrayList<Task> = ArrayList()
+    private var selectedTasksDatesList: ArrayList<Date> = ArrayList()
     private var selectedPositionsList: ArrayList<Int> = ArrayList()
 
     private var optionsMenu: Menu? = null
@@ -59,7 +60,8 @@ class TasksListFragment : BaseFragment(), TaskListener {
 
         mTaskViewModel.allTasks.observe(this, Observer { tasks ->
             // Update the cached copy of the tasks in the adapter.
-            tasks?.let { mAdapter.setTasks(it) }
+            tasks?.let { mAdapter.
+                setTasks(it) }
         })
 
 
@@ -83,7 +85,7 @@ class TasksListFragment : BaseFragment(), TaskListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.action_delete -> {
-                mTaskViewModel.deleteAll(selectedItemsList)
+                mTaskViewModel.deleteMany(selectedTasksDatesList)
                 for (pos: Int in selectedPositionsList) {
                     mAdapter.notifyItemRemoved(pos)
                 }
@@ -99,13 +101,13 @@ class TasksListFragment : BaseFragment(), TaskListener {
     private fun onClickInSelectMode(holder: MyAdapter.MyViewHolder) {
         val position = holder.adapterPosition
         val currTask = mAdapter.getTaskByPos(position)
-        if (selectedItemsList.contains(currTask)) {
-            selectedItemsList.remove(currTask)
+        if (selectedTasksDatesList.contains(currTask.createDate)) {
+            selectedTasksDatesList.remove(currTask.createDate)
             selectedPositionsList.remove(position)
             holder.rowRelativeLayout.setBackgroundResource(R.color.white)
 
         } else {
-            selectedItemsList.add(currTask)
+            selectedTasksDatesList.add(currTask.createDate)
             selectedPositionsList.add(position)
             holder.rowRelativeLayout.setBackgroundResource(R.color.colorSelected)
         }
@@ -120,10 +122,10 @@ class TasksListFragment : BaseFragment(), TaskListener {
                 item?.isVisible = true
                 selectedMode = true
                 val selectedPosition = holder.adapterPosition
-                selectedItemsList.add(
+                selectedTasksDatesList.add(
                     mAdapter.getTaskByPos(
                         selectedPosition
-                    )
+                    ).createDate
                 )
                 selectedPositionsList.add(selectedPosition)
                 holder.rowRelativeLayout.setBackgroundResource(R.color.colorSelected)

@@ -38,7 +38,7 @@ class MyAdapter(context: Context, private val listener: TaskListener) :
     override fun getItemCount() = tasks.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        tasks.sortedByDescending { it -> it.createDate }
+        tasks.sortedByDescending{ it -> it.createDate }
 
         val task = tasks[position]
         holder.tvTitle.text = task.title

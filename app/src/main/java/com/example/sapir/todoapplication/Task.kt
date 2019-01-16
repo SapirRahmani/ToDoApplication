@@ -2,6 +2,7 @@ package com.example.sapir.todoapplication
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
@@ -24,6 +25,7 @@ data class Task(
 
 ) :
     Parcelable {
+    @Ignore
     constructor(parcel: Parcel) : this(
         parcel.readValue(Date::class.java.classLoader) as Date,
         parcel.readString(),
@@ -32,6 +34,7 @@ data class Task(
     ) {
     }
 
+    @Ignore
     constructor() : this(Date(), "", "", false)
 
     override fun describeContents(): Int {

@@ -8,7 +8,7 @@ import java.util.*
 @Dao
 abstract interface TaskDao {
     @Query("SELECT * from tasks")
-    fun getAll(): LiveData<ArrayList<Task>>
+    fun getAll(): LiveData<List<Task>>
 
     @Query("SELECT * from tasks WHERE createDate == :date")
     fun getById(date:Date): LiveData<Task>
@@ -17,13 +17,13 @@ abstract interface TaskDao {
     fun insert(task: Task)
 
     @Insert
-    abstract fun insertAll(tasks: ArrayList<Task>)
+    abstract fun insertAll(tasks: List<Task>)
 
     @Delete
     fun delete(task: Task)
 
-    @Query("DELETE from tasks")
-    fun deleteAll()
+    @Query("DELETE from tasks where createDate in (:dates)")
+    fun deleteMany(dates: List<Long>)
 
     @Update
     fun update(task: Task)

@@ -4,16 +4,12 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import com.example.sapir.todoapplication.Task
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 
 class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: TaskRepository
-    val allTasks: LiveData<ArrayList<Task>>
+    val allTasks: LiveData<List<Task>>
 
     init {
         val taskDao = TaskDatabase.getDatabase(application).taskDao()
@@ -29,7 +25,7 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         repository.insert(task)
     }
 
-    fun insertAll(tasks: ArrayList<Task>) {
+    fun insertAll(tasks: List<Task>) {
         repository.insertAll(tasks)
     }
 
@@ -37,8 +33,8 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         repository.delete(task)
     }
 
-    fun deleteAll(tasks: ArrayList<Task>) {
-        repository.deleteAll(tasks)
+    fun deleteMany(dates: List<Date>) {
+        repository.deleteMany(dates)
     }
 
     fun update(task: Task) {
