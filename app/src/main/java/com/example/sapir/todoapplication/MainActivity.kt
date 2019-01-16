@@ -1,5 +1,6 @@
 package com.example.sapir.todoapplication
 
+import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.Fragment
 import android.os.Bundle
@@ -7,24 +8,25 @@ import android.view.Menu
 import com.example.sapir.todoapplication.Fragment.NewTaskFragment
 import com.example.sapir.todoapplication.Fragment.TasksListFragment
 import com.example.sapir.todoapplication.Listener.NavigationListener
-
 import com.example.sapir.todoapplication.Listener.OnBackPressedListener
+import com.example.sapir.todoapplication.Room.TaskViewModel
 
 
 class MainActivity : AppCompatActivity(), NavigationListener {
 
+    lateinit var mTaskViewModel: TaskViewModel
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        TasksListSingleton.initialize()
+        mTaskViewModel =  ViewModelProviders.of(this).get(TaskViewModel::class.java)
 
         if (savedInstanceState == null) {
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.add(R.id.frameLayout_main, TasksListFragment.newInstance())
                 .addToBackStack(null)
                 .commit();
-
-
         }
     }
 
@@ -37,8 +39,8 @@ class MainActivity : AppCompatActivity(), NavigationListener {
             }
         }
         super.onBackPressed()
-    }
 
+}
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu, menu)
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity(), NavigationListener {
     }
 
     override fun onNavClick(fragment: String, key: String?, task: Task?) {
-        val bundle: Bundle = Bundle()
+        val bundle = Bundle()
         if (task != null && key != null) {
             bundle.putParcelable(key, task)
         }
@@ -75,8 +77,8 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         if (newTaskBundle != null) {
 
             // get new task and put in list
-            var newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as Task
-            TasksListSingleton.add(newTask)
+            val newTask = newTaskBundle[this.getString(R.string.new_task_bundle_key)] as Task
+            mTaskViewModel.insert(newTask)
         }
         replaceFragment(R.id.frameLayout_main, tasksListFragment)
     }
@@ -85,6 +87,6 @@ class MainActivity : AppCompatActivity(), NavigationListener {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(layoutId, fragment)
             .addToBackStack(null)
-            .commit();
+            .commit()
     }
 }

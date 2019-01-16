@@ -1,15 +1,27 @@
 package com.example.sapir.todoapplication
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import java.util.*
 
-//@Entity(tableName = "tasks")
+@Entity(tableName = "tasks")
 data class Task(
-    /*@PrimaryKey @ColumnInfo(name = "createDate")*/    var createDate: Date = Date(),
-    /*@ColumnInfo(name = "title")                 */    var title: String? = "(No Title)",
-    /*@ColumnInfo(name = "description")           */    var description: String,
-    /*@ColumnInfo(name = "checked")               */    var checked: Boolean = false
+    @PrimaryKey
+    @ColumnInfo(name = "createDate")
+    var createDate: Date = Date(),
+
+    @ColumnInfo(name = "title")
+    var title: String? = "(No Title)",
+
+    @ColumnInfo(name = "description")
+    var description: String,
+
+    @ColumnInfo(name = "checked")
+    var checked: Boolean = false
+
 ) :
     Parcelable {
     constructor(parcel: Parcel) : this(

@@ -1,15 +1,21 @@
-package com.example.sapir.todoapplication
+package com.example.sapir.todoapplication.RecyclerView
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.sapir.todoapplication.Listener.TaskListener
+import com.example.sapir.todoapplication.R
+import com.example.sapir.todoapplication.Task
 import kotlinx.android.synthetic.main.todo_task_item.view.*
 
 
-class MyAdapter(private val items: ArrayList<Task>, private val listener: TaskListener) :
+class MyAdapter(context: Context, private val listener: TaskListener) :
     RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private var tasks = emptyList<Task>()
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tvTitle = view.tv_title
@@ -23,29 +29,39 @@ class MyAdapter(private val items: ArrayList<Task>, private val listener: TaskLi
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MyAdapter.MyViewHolder {
+    ): MyViewHolder {
 
-        return MyViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.todo_task_item, parent, false))
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.todo_task_item, parent, false)
+        return MyViewHolder(itemView)
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = tasks.size
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        items.sortByDescending { it -> it.createDate }
+        tasks.sortedByDescending { it -> it.createDate }
 
-        val task = items[position]
+        val task = tasks[position]
         holder.tvTitle.text = task.title
         holder.tvDescription.text = task.description
         holder.cbChecked.isChecked = task.checked
         holder.tvCreatedDate.text = android.text.format.DateFormat.format("dd-MM-yyyy HH:mm:ss", task.createDate)
 
 
-        changeColorOnTaskChecked(position, items, holder)
+        changeColorOnTaskChecked(position, tasks, holder)
         listener.onTaskLongClicked(holder)
         listener.onTaskClicked(holder)
     }
 
-    private fun changeColorOnTaskChecked(position: Int, items: ArrayList<Task>, holder: MyViewHolder) {
+    internal fun setTasks(tasks: List<Task>) {
+        this.tasks = tasks
+        notifyDataSetChanged()
+    }
+
+    fun getTaskByPos(pos: Int): Task {
+        return this.tasks[pos]
+    }
+
+    private fun changeColorOnTaskChecked(position: Int, items: List<Task>, holder: MyViewHolder) {
         if (items[position].checked) {
             holder.rowRelativeLayout.setBackgroundResource(R.color.colorLight)
         }
@@ -60,7 +76,6 @@ class MyAdapter(private val items: ArrayList<Task>, private val listener: TaskLi
             notifyItemChanged(position, items[position])
         }
     }
-
 
 
 }

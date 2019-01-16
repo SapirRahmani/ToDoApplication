@@ -45,9 +45,9 @@ class NewTaskFragment : BaseFragment(), OnBackPressedListener {
         // change title and prepare edit mode
         if (editTask != null) {
             oldTask = editTask as Task?
-            editMode = true;
+            editMode = true
             tv_newTaskTitle.text = getString(R.string.editTaskTitle)
-            fragmentAddNewTaskBinding?.task = editTask as Task?
+            fragmentAddNewTaskBinding?.task = editTask
             fragmentAddNewTaskBinding?.task?.createDate = Date()
 
         } else {

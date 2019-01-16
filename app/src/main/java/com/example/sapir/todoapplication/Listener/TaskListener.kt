@@ -1,6 +1,6 @@
 package com.example.sapir.todoapplication.Listener
 
-import com.example.sapir.todoapplication.MyAdapter
+import com.example.sapir.todoapplication.RecyclerView.MyAdapter
 
 interface TaskListener {
 
