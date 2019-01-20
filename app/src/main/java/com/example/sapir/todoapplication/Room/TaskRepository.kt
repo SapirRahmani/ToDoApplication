@@ -1,7 +1,6 @@
 package com.example.sapir.todoapplication.Room
 
 import android.arch.lifecycle.LiveData
-import android.databinding.adapters.Converters
 import android.support.annotation.WorkerThread
 import com.example.sapir.todoapplication.Task
 import java.util.*
@@ -14,49 +13,26 @@ class TaskRepository(private val taskDao: TaskDao) {
 
     @WorkerThread
     fun insert(task: Task) {
-        var myExecutor: Executor = Executors.newSingleThreadExecutor();
-        myExecutor.execute {
-            taskDao.insert(task)
-        }
+        ExecutorWrapper.wrapperFunOneTask(taskDao::insert,task)
     }
 
     @WorkerThread
-    fun getById(date: Date) {
-        var myExecutor: Executor = Executors.newSingleThreadExecutor();
-        myExecutor.execute {
-            taskDao.getById(date)
-        }
-    }
-
-    @WorkerThread
-    fun insertAll(tasks: List<Task>) {
-        var myExecutor: Executor = Executors.newSingleThreadExecutor();
-        myExecutor.execute {
-            taskDao.insertAll(tasks)
-        }
+    fun insertMany(tasks: List<Task>) {
+        ExecutorWrapper.wrapperFunTaskList(taskDao::insertMany,tasks)
     }
 
     @WorkerThread
     fun delete(task: Task) {
-        var myExecutor: Executor = Executors.newSingleThreadExecutor();
-        myExecutor.execute {
-            taskDao.delete(task)
-        }
+        ExecutorWrapper.wrapperFunOneTask(taskDao::delete,task)
     }
 
     @WorkerThread
     fun deleteMany(dates: List<Date>) {
-        var myExecutor: Executor = Executors.newSingleThreadExecutor();
-        myExecutor.execute {
-            taskDao.deleteMany(dates.map { it.time })
-        }
+        ExecutorWrapper.wrapperFunLongList(taskDao::deleteMany,dates.map { it.time })
     }
 
     @WorkerThread
     fun update(task: Task) {
-        var myExecutor: Executor = Executors.newSingleThreadExecutor();
-        myExecutor.execute {
-            taskDao.update(task)
-        }
+        ExecutorWrapper.wrapperFunOneTask(taskDao::update,task)
     }
 }

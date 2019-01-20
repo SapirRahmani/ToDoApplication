@@ -60,8 +60,9 @@ class TasksListFragment : BaseFragment(), TaskListener {
 
         mTaskViewModel.allTasks.observe(this, Observer { tasks ->
             // Update the cached copy of the tasks in the adapter.
-            tasks?.let { mAdapter.
-                setTasks(it) }
+            tasks?.let {
+                mAdapter.setTasks(it)
+            }
         })
 
 

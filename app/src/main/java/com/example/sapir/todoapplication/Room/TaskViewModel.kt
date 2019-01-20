@@ -17,16 +17,12 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
         allTasks = repository.allTasks
     }
 
-    fun getById(date: Date) {
-        return repository.getById(date)
-    }
-
     fun insert(task: Task) {
         repository.insert(task)
     }
 
-    fun insertAll(tasks: List<Task>) {
-        repository.insertAll(tasks)
+    fun insertMany(tasks: List<Task>) {
+        repository.insertMany(tasks)
     }
 
     fun delete(task: Task) {
