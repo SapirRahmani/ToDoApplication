@@ -14,9 +14,7 @@ import com.example.sapir.todoapplication.Listener.TaskListener
 import com.example.sapir.todoapplication.RecyclerView.MyAdapter
 import com.example.sapir.todoapplication.Util.TaskUtil
 import com.example.sapir.todoapplication.databinding.FragmentToDoListTasksBinding
-import java.util.*
 import kotlin.collections.ArrayList
-
 
 class TasksListFragment : BaseFragment(), TaskListener {
 
@@ -25,7 +23,7 @@ class TasksListFragment : BaseFragment(), TaskListener {
 
     // activateDeleteSwipeListener many
     private var selectedMode: Boolean = false
-    private var selectedTasksDatesList: ArrayList<Date> = ArrayList()
+    private var selectedTasksList: ArrayList<Task> = ArrayList()
     private var selectedPositionsList: ArrayList<Int> = ArrayList()
 
     private var optionsMenu: Menu? = null
@@ -58,7 +56,7 @@ class TasksListFragment : BaseFragment(), TaskListener {
 
         mAdapter = MyAdapter(context!!, this)
 
-        mTaskViewModel.allTasks.observe(this, Observer { tasks ->
+        mTaskViewModel.allTasks?.observe(viewLifecycleOwner, Observer { tasks ->
             // Update the cached copy of the tasks in the adapter.
             tasks?.let {
                 mAdapter.setTasks(it)
@@ -69,10 +67,12 @@ class TasksListFragment : BaseFragment(), TaskListener {
         mRecyclerView.adapter = mAdapter
 
         // activateDeleteSwipeListener one item or multi
-        TaskUtil.activateDeleteSwipeListener(mAdapter, mRecyclerView, mTaskViewModel)
+        TaskUtil.activateDeleteSwipeListener(this, mRecyclerView)
 
         //add
-        fab_add_task?.setOnClickListener { myListener.onNavClick(NewTaskFragment.toString(), null) }
+        fab_add_task?.setOnClickListener {
+            myListener.onNavClick(NewTaskFragment.toString())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -86,7 +86,7 @@ class TasksListFragment : BaseFragment(), TaskListener {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.action_delete -> {
-                mTaskViewModel.deleteMany(selectedTasksDatesList)
+                mTaskViewModel.deleteMany(selectedTasksList)
                 for (pos: Int in selectedPositionsList) {
                     mAdapter.notifyItemRemoved(pos)
                 }
@@ -102,13 +102,13 @@ class TasksListFragment : BaseFragment(), TaskListener {
     private fun onClickInSelectMode(holder: MyAdapter.MyViewHolder) {
         val position = holder.adapterPosition
         val currTask = mAdapter.getTaskByPos(position)
-        if (selectedTasksDatesList.contains(currTask.createDate)) {
-            selectedTasksDatesList.remove(currTask.createDate)
+        if (selectedTasksList.contains(currTask)) {
+            selectedTasksList.remove(currTask)
             selectedPositionsList.remove(position)
             holder.rowRelativeLayout.setBackgroundResource(R.color.white)
 
         } else {
-            selectedTasksDatesList.add(currTask.createDate)
+            selectedTasksList.add(currTask)
             selectedPositionsList.add(position)
             holder.rowRelativeLayout.setBackgroundResource(R.color.colorSelected)
         }
@@ -123,10 +123,10 @@ class TasksListFragment : BaseFragment(), TaskListener {
                 item?.isVisible = true
                 selectedMode = true
                 val selectedPosition = holder.adapterPosition
-                selectedTasksDatesList.add(
+                selectedTasksList.add(
                     mAdapter.getTaskByPos(
                         selectedPosition
-                    ).createDate
+                    )
                 )
                 selectedPositionsList.add(selectedPosition)
                 holder.rowRelativeLayout.setBackgroundResource(R.color.colorSelected)
@@ -141,9 +141,28 @@ class TasksListFragment : BaseFragment(), TaskListener {
             if (selectedMode) {
                 onClickInSelectMode(holder)
             } else {
-                TaskUtil.activateEditTask(holder, mAdapter, myListener, mTaskViewModel)
+                TaskUtil.activateEditTask(this, holder)
 
             }
         }
     }
+
+    override fun onDelete(position: Int) {
+        val taskToRemove = mAdapter.getTaskByPos(position)
+        mTaskViewModel.delete(taskToRemove)
+        mAdapter.notifyItemRemoved(position)
+    }
+
+    override fun onEdit(position: Int) {
+        val taskToEdit = mAdapter.getTaskByPos(position)
+        mTaskViewModel.editTask = taskToEdit
+
+        mAdapter.notifyItemRemoved(position)
+
+        myListener.onNavClick(
+            "EditTaskFragment"
+        )
+    }
+
+
 }

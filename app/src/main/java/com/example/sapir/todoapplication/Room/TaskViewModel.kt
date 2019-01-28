@@ -10,27 +10,24 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: TaskRepository
     val allTasks: LiveData<List<Task>>
+    var editTask :Task? = null
 
     init {
         val taskDao = TaskDatabase.getDatabase(application).taskDao()
-        repository = TaskRepository(taskDao)
-        allTasks = repository.allTasks
+        repository = TaskRepository.getRepository(taskDao)
+        allTasks = repository.getAll()
     }
 
     fun insert(task: Task) {
         repository.insert(task)
     }
 
-    fun insertMany(tasks: List<Task>) {
-        repository.insertMany(tasks)
-    }
-
     fun delete(task: Task) {
         repository.delete(task)
     }
 
-    fun deleteMany(dates: List<Date>) {
-        repository.deleteMany(dates)
+    fun deleteMany(tasks: List<Task>) {
+        repository.deleteMany(tasks)
     }
 
     fun update(task: Task) {

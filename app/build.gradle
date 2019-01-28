@@ -67,13 +67,15 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     kapt "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
-    /*// Coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"*/
+    // Paging
+    implementation "android.arch.paging:runtime:$paging_version"
+
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
+
+    // WorkerManager
+    //implementation "android.arch.work:work-runtime:$work_version" // use -ktx for Kotlin+Coroutines
+
 }
 
-/*kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}*/

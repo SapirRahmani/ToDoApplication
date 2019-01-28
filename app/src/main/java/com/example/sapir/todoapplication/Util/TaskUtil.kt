@@ -4,13 +4,14 @@ import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import com.example.sapir.todoapplication.Listener.NavigationListener
+import com.example.sapir.todoapplication.Listener.TaskListener
 import com.example.sapir.todoapplication.RecyclerView.MyAdapter
 import com.example.sapir.todoapplication.Room.TaskViewModel
 
 object TaskUtil {
 
     @JvmStatic
-    fun activateDeleteSwipeListener(myAdapter: MyAdapter, myRecyclerView: RecyclerView, taskViewModel: TaskViewModel) {
+    fun activateDeleteSwipeListener(listener: TaskListener, myRecyclerView: RecyclerView) {
 
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(
             0,
@@ -43,10 +44,7 @@ object TaskUtil {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val position = viewHolder.adapterPosition
-                val taskToRemove = myAdapter.getTaskByPos(position)
-
-                taskViewModel.delete(taskToRemove)
-                myAdapter.notifyItemRemoved(position)
+                listener.onDelete(position)
             }
         }
 
@@ -55,22 +53,9 @@ object TaskUtil {
     }
 
     @JvmStatic
-    fun activateEditTask(
-        holder: MyAdapter.MyViewHolder,
-        adapter: MyAdapter,
-        myListener: NavigationListener,
-        taskViewModel: TaskViewModel
-    ) {
+    fun activateEditTask(listener: TaskListener, holder: MyAdapter.MyViewHolder) {
         val position = holder.adapterPosition
-        val taskToRemove = adapter.getTaskByPos(position)
-        taskViewModel.delete(taskToRemove)
-        adapter.notifyItemRemoved(position)
-
-        myListener.onNavClick(
-            "EditTaskFragment",
-            "Edit",
-            taskToRemove
-        )
+        listener.onEdit(position)
     }
 
 }

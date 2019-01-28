@@ -10,7 +10,8 @@ import java.util.*
 
 @Entity(tableName = "tasks")
 data class Task(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
     @ColumnInfo(name = "createDate")
     var createDate: Date = Date(),
 
@@ -23,40 +24,7 @@ data class Task(
     @ColumnInfo(name = "checked")
     var checked: Boolean = false
 
-) :
-    Parcelable {
-    @Ignore
-    constructor(parcel: Parcel) : this(
-        parcel.readValue(Date::class.java.classLoader) as Date,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readByte() != 0.toByte()
-    ) {
-    }
-
-    @Ignore
-    constructor() : this(Date(), "", "", false)
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(title)
-        dest.writeString(description)
-        dest.writeValue(createDate)
-        dest.writeValue(checked)
-    }
-
-    companion object CREATOR : Parcelable.Creator<Task> {
-        override fun createFromParcel(parcel: Parcel): Task {
-            return Task(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Task?> {
-            return arrayOfNulls(size)
-        }
-    }
-
+) {
+    constructor() : this(0, Date(), "", "", false)
 
 }

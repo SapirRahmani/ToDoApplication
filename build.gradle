@@ -23,9 +23,11 @@ allprojects {
 }
 
 ext {
-    roomVersion = '1.1.1'
-    archLifecycleVersion = '1.1.1'
-    coroutines = '1.0.0'
+    roomVersion = "1.1.1"
+    archLifecycleVersion = "1.1.1"
+    paging_version = "1.0.1"
+    nav_version = "1.0.0-alpha09"
+    work_version = "1.0.0-beta02"
 }
 
 task clean(type: Delete) {

@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.sapir.todoapplication.Listener.OnBackPressedListener
+import com.example.sapir.todoapplication.Listener.BackPressedListener
 import com.example.sapir.todoapplication.R
 import com.example.sapir.todoapplication.Task
 import com.example.sapir.todoapplication.databinding.FragmentNewTaskBinding
 import kotlinx.android.synthetic.main.fragment_new_task.*
 import java.util.*
 
-class NewTaskFragment : BaseFragment(), OnBackPressedListener {
+class NewTaskFragment : BaseFragment(), BackPressedListener {
 
 
     private var fragmentAddNewTaskBinding: FragmentNewTaskBinding? = null
@@ -37,14 +37,13 @@ class NewTaskFragment : BaseFragment(), OnBackPressedListener {
         return fragmentAddNewTaskBinding?.root
     }
 
-    @SuppressLint("SimpleDateFormat", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val editTask = arguments?.get(getString(R.string.edit_task_bundle_key))
+        val editTask = mTaskViewModel.editTask
         // change title and prepare edit mode
         if (editTask != null) {
-            oldTask = editTask as Task?
+            oldTask = editTask
             editMode = true
             tv_newTaskTitle.text = getString(R.string.editTaskTitle)
             fragmentAddNewTaskBinding?.task = editTask
@@ -60,10 +59,12 @@ class NewTaskFragment : BaseFragment(), OnBackPressedListener {
                 Toast.makeText(activity, getString(R.string.description_is_empty), Toast.LENGTH_SHORT).show()
             } else {
                 // save and replace fragment
+                if (editTask != null)
+                    mTaskViewModel.update(fragmentAddNewTaskBinding?.task!!)
+                else
+                    mTaskViewModel.insert(fragmentAddNewTaskBinding?.task!!)
                 myListener.onNavClick(
-                    TasksListFragment.toString(), getString(
-                        R.string.new_task_bundle_key
-                    ), fragmentAddNewTaskBinding?.task
+                    TasksListFragment.toString()
                 )
             }
         }
@@ -71,13 +72,9 @@ class NewTaskFragment : BaseFragment(), OnBackPressedListener {
 
     override fun onBackPressed() {
         if (oldTask != null) {
-
+            mTaskViewModel.update(oldTask!!)
             // save old task and back to tasks list
-            myListener.onNavClick(
-                TasksListFragment.toString(), getString(
-                    R.string.new_task_bundle_key
-                ), oldTask
-            )
+            myListener.onNavClick(TasksListFragment.toString())
         }
     }
 

@@ -1,5 +1,5 @@
 package com.example.sapir.todoapplication.Listener
 
-interface OnBackPressedListener {
+interface BackPressedListener {
     fun onBackPressed()
 }

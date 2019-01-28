@@ -13,7 +13,8 @@ open class BaseFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel::class.java)
+        mTaskViewModel = ViewModelProviders.of(this.activity!!).get(TaskViewModel::class.java)
+
     }
 
     override fun onAttach(context: Context?) {
